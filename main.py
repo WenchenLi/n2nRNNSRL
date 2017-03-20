@@ -45,6 +45,10 @@ if __name__ == '__main__':
 
     if argv.mode == 'train':
         train.main(argv)
+    elif argv.mode =='test':
+        assert argv.model is not None
+        assert argv.arg_dict is not None
+        predict.main(argv)
     else:
         assert argv.model is not None
         assert argv.arg_dict is not None

@@ -3,12 +3,19 @@ deep learning approach(s) on Semantic Role Labeling
 
 ## Semantic Role Labeler with Recurrent Neural Networks
 
+##todo
+1. predict.py
+2. resume training
+3. how to label your data
 ### run
 ```bash
 # you can ignore the gzip warning
 chmod +x *.sh
 ./prepare_data.sh
-./run.sh
+./train.sh
+
+# use predict.py for prediction
+
 ```
 
 This repo contains Theano implementations of the models described in the following paper:
@@ -20,6 +27,9 @@ The model gives about F1 = 78.00 on the dev & test set in the following hyperpar
 ### Data
 - CoNLL-2005 Shared Task (http://www.cs.upc.edu/~srlconll/)
 - Word Embedding: SENNA (http://ronan.collobert.com/senna/)
+
+#### how to label your own data
+
 
 #reference
 - [Zhou, Jie and Wei Xu. “End-to-end learning of semantic role labeling using recurrent neural networks.” ACL (2015).](https://arxiv.org/pdf/1701.02593.pdf)

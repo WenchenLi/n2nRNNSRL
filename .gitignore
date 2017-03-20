@@ -97,3 +97,8 @@ ENV/
 
 data/
 /train_dir/
+.idea/misc.xml
+.idea/modules.xml
+.idea/n2nSRL_new.iml
+.idea/workspace.xml
+train_dir/

@@ -39,6 +39,7 @@ if __name__ == '__main__':
     parser.add_argument('--no-shuffle', action='store_true', default=False, help='don\'t shuffle training data')
     parser.add_argument('--model', default=None, help='path to model')
     parser.add_argument('--arg_dict', default=None, help='path to arg dict')
+    parser.add_argument('--train_dir', default='train_dir/', help='path to train dir')
 
     argv = parser.parse_args()
 

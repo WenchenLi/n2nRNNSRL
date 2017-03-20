@@ -55,7 +55,7 @@ def main(argv):
             get_id_samples(test_corpus, vocab_word=vocab_word, a_dict=arg_dict)
 
     print '\tLabel size: %d' % arg_dict.size()
-    dump_data(data=arg_dict, fn='arg_dict-%d' % (arg_dict.size()))
+    dump_data(data=arg_dict, fn=argv.train_dir + 'arg_dict-%d' % (arg_dict.size()))
 
     """ convert formats for theano """
     print '\n\tCreating Training/Dev/Test Samples...'
@@ -158,7 +158,7 @@ def main(argv):
                 if argv.save:
                     fn = 'Layer-%d_Dim-%d_Batch-%d_Hidden-%d_Reg-%f_Epoch-%d' % (
                         argv.layer, argv.hidden, argv.batch, argv.hidden, argv.reg, epoch)
-                    dump_data(data=tagger, fn=fn)
+                    dump_data(data=tagger, fn=argv.train_dir + fn)
 
                 """ Output Results """
                 output_results(dev_corpus, dev_prds, arg_dict, predicts,

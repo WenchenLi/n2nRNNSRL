@@ -1,4 +1,4 @@
-__author__ = 'hiroki'
+__author__ = 'Wenchen Li'
 
 import sys
 import time
@@ -16,8 +16,8 @@ def main(argv):
 
     """ load corpus"""
     print '\n\tCorpus Preprocessing...'
-    test_corpus = load_conll(argv.test_data)
-    print '\tTest Sentences: %d' % len(test_corpus)
+    predict_corpus = load_conll(argv.predict_data)
+    print '\tTest Sentences: %d' % len(predict_corpus)
 
     """ load initial embedding file """
     print '\n\tInitial Embedding Loading...'
@@ -25,18 +25,18 @@ def main(argv):
     print '\tVocabulary Size: %d' % vocab_word.size()
 
     """ load arg dict """
-    print '\n\tInitial Embedding Loading...'
+    print '\n\targ dict Loading...'
     arg_dict = load_data(argv.arg_dict)
     print '\tLabel size: %d' % arg_dict.size()
 
     """ convert words into ids """
     print '\n\tConverting Words into IDs...'
-    te_id_sents, te_id_ctx, te_marks, te_prds, test_y, test_arg_dict = get_id_samples(test_corpus,
+    te_id_sents, te_id_ctx, te_marks, te_prds, test_y, test_arg_dict = get_id_samples(predict_corpus,
                                                                                       vocab_word=vocab_word,
                                                                                       a_dict=arg_dict)
 
     """ convert formats for theano """
-    print '\n\tCreating Test Samples...'
+    print '\n\tCreating  Samples...'
     test_sample_x, test_sample_y = convert_data_test(te_id_sents, te_prds, te_id_ctx, te_marks, test_y, init_emb)
 
     """ load tagger"""
@@ -44,29 +44,25 @@ def main(argv):
     tagger = load_data(argv.model)
 
     print '\nTheano Code Compiling...'
-
-    test_model = theano.function(
+    # like tensorflow , theano is static graph,
+    # for prediction tagger.d, tagger.error need to be an place holder
+    predict_model = theano.function(
         inputs=[tagger.x, tagger.d],
-        outputs=[tagger.y_pred, tagger.errors],
+        outputs=[tagger.y_pred,tagger.errors],
         mode='FAST_RUN',
     )
-
-    # f, predicts = predict(test_model, test_sample_x, test_sample_y, test_arg_dict, 'Test')
-    predicts = predict(test_model, test_sample_x, test_sample_y, test_arg_dict, 'Predict')
-
-    print predicts
-    return predicts
-    # output_results(test_corpus, te_prds, arg_dict, predicts,
-    #                'Test-result.layer%d.batch%d.hidden%d.opt-%s.reg-%f.txt' % (
-    #                argv.layer, argv.batch, argv.hidden, argv.opt, argv.reg))
+    print tagger.d
+    print tagger.errors
 
 
-def predict(model, sample_x, sample_y,  test_arg_dict, mode):
-    print '\n\t%s Index: ' % mode,
+    predicts = predict(predict_model, test_sample_x, test_sample_y)
+    output_results(predict_corpus, te_prds, arg_dict, predicts,'Predict-result.txt')
+
+
+def predict(model, sample_x, sample_y):
+
     start = time.time()
-
     predicts = []
-    errors = []
 
     sample_index = 0
     for index in xrange(len(sample_x)):
@@ -79,15 +75,11 @@ def predict(model, sample_x, sample_y,  test_arg_dict, mode):
                 print '%d' % sample_index,
                 sys.stdout.flush()
 
-            pred, error = model([batch_x[b_index]], [batch_y[b_index]])
+            pred, _ = model([batch_x[b_index]],[batch_y[b_index]])
             predicts.append(pred[0])
-            errors.append(error[0])
 
     end = time.time()
-    total, correct = count_correct(errors)
     print '\tTime: %f seconds' % (end - start)
-    print '\t%s Accuracy: %f' % (mode, correct / total)
 
-    # return f_measure(predicts, sample_y, test_arg_dict), predicts
     return predicts
 

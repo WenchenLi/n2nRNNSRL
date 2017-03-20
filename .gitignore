@@ -102,3 +102,5 @@ data/
 .idea/n2nSRL_new.iml
 .idea/workspace.xml
 train_dir/
+/test_dir/
+/Predict-result.txt

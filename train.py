@@ -162,7 +162,7 @@ def main(argv):
 
                 """ Output Results """
                 output_results(dev_corpus, dev_prds, arg_dict, predicts,
-                               'Dev-result.layer%d.batch%d.hidden%d.opt-%s.reg-%f.epoch%d.txt' % (
+                               argv.train_dir + 'Dev-result.layer%d.batch%d.hidden%d.opt-%s.reg-%f.epoch%d.txt' % (
                                argv.layer, argv.batch, argv.hidden, argv.opt, argv.reg, epoch))
                 flag = True
             print '\t### Best Dev F Score: %f  Epoch: %d ###' % (best_dev_f, best_epoch+1)
@@ -173,7 +173,7 @@ def main(argv):
                 best_test_f = test_f
                 flag = False
                 output_results(test_corpus, te_prds, arg_dict, predicts,
-                               'Test-result.layer%d.batch%d.hidden%d.opt-%s.reg-%f.epoch%d.txt' % (
+                               argv.train_dir + 'Test-result.layer%d.batch%d.hidden%d.opt-%s.reg-%f.epoch%d.txt' % (
                                argv.layer, argv.batch, argv.hidden, argv.opt, argv.reg, epoch))
             if argv.dev_data:
                 print '\t### Best Test F Score: %f  Epoch: %d ###' % (best_test_f, best_epoch+1)

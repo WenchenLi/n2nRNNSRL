@@ -25,7 +25,7 @@ if __name__ == '__main__':
     parser.add_argument('--unit',  default='gru', help='Unit')
     parser.add_argument('--vocab',  type=int, default=100000000, help='vocabulary size')
     parser.add_argument('--emb',    type=int, default=32,        help='dimension of embeddings')
-    parser.add_argument('--window', type=int, default=5,         help='window size for convolution')
+    parser.add_argument('--window', type=int, default=5,         help='window size for context')
     parser.add_argument('--hidden', type=int, default=128,        help='dimension of hidden layer')
     parser.add_argument('--layer',  type=int, default=4,         help='number of layers')
 

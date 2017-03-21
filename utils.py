@@ -76,7 +76,7 @@ def load_conll(path, exclude=False, file_encoding='utf-8'):
 #                word = RE_NUM.sub(u'0', word)
                 tag = es[1].decode(file_encoding)
                 syn = es[2].decode(file_encoding)
-                ne = es[3].decode(file_encoding)
+                ne = es[3].decode(file_encoding) # you can ingore 1-3 for n2n SRL task, but we parse here just in case
                 prd = es[4].decode(file_encoding)#Target
                 prop = []
 
@@ -324,6 +324,36 @@ def convert_data_test(id_sents, prds, id_ctx, marks, args, emb):
             batch_y.append(np.asarray([arg], dtype='int32'))
 
     return batch_x, batch_y
+
+
+def convert_data_predict(id_sents, prds, id_ctx, marks, emb):
+    batch_x = []
+
+    for s_i in xrange(len(id_sents)):
+        sent_w = [emb[w_id] for w_id in id_sents[s_i]]
+        sent_prds = prds[s_i]
+        sent_ctx = id_ctx[s_i]
+        sent_marks = marks[s_i]
+
+        for p_i, p_index in enumerate(sent_prds):
+            prd = sent_w[p_index]
+            ctx = []
+            for w_index in sent_ctx[p_i]:
+                ctx.extend(sent_w[w_index])
+
+            mark = sent_marks[p_i]
+            sent_sample = []
+            for w_index, w in enumerate(sent_w):
+                sample = []
+                sample.extend(w)
+                sample.extend(prd)
+                sample.extend(ctx)
+                sample.append(mark[w_index])
+                sent_sample.append(sample)
+
+            batch_x.append(np.asarray([sent_sample], dtype=theano.config.floatX))
+
+    return batch_x,
 
 
 def shuffle(sample_x, sample_y):

@@ -5,7 +5,7 @@ import time
 import theano
 from utils import load_conll, load_init_emb, get_id_samples, convert_data_test, output_results, load_data, count_correct, f_measure
 
-import nltk
+# import nltk
 
 def main(argv):
     print '\nSYSTEM START'
@@ -18,41 +18,40 @@ def main(argv):
     """ load corpus"""
     print '\n\tCorpus Preprocessing...'
 
-    sentence = "Scotty accepted the decision with indifference and did not enter the arguments"
+    # sentence = "Scotty accepted the decision with indifference and did not enter the arguments"
+    #
+    # def count_predicate(pos,sentence):
+    #     count = 0
+    #     for i, s in enumerate(sentence.split(" ")):
+    #         tag = pos[i]
+    #         print s, tag
+    #         if tag[1] in ["VB", "VBZ", "VBD", "VBG", "VBN", "VBP"]:  # predicates or verb
+    #             count +=1
+    #     return count
+    #
+    # def sentence_to_conll_pred(sentence):
+    #     seperator = "\t"
+    #     placeholder = "*"
+    #     st = nltk.stem.lancaster.LancasterStemmer()
+    #     pos = nltk.pos_tag(sentence)
+    #
+    #     NUM_PROPS = count_predicate(pos,sentence)
+    #     print NUM_PROPS
+    #     nltk.download('averaged_perceptron_tagger')
+    #     with open("to_be_predicted.txt", 'w') as f:
+    #         for i,s in enumerate(sentence.split(" ")):
+    #             tag = pos[i]
+    #             print s,tag
+    #             if tag in ["VB","VBZ","VBD","VBG","VBN","VBP"]:#predicates or verb
+    #                 target = st.stem(s)
+    #             else:
+    #                 target = "-"
+    #             line = [s] + [placeholder] * 3 + [target] + [placeholder]* NUM_PROPS
+    #             f.write(seperator.join(line)+"\n")
+    # sentence_to_conll_pred(sentence)
+    # predict_corpus = load_conll("to_be_predicted.txt")
 
-    def count_predicate(pos,sentence):
-        count = 0
-        for i, s in enumerate(sentence.split(" ")):
-            tag = pos[i]
-            print s, tag
-            if tag[1] in ["VB", "VBZ", "VBD", "VBG", "VBN", "VBP"]:  # predicates or verb
-                count +=1
-        return count
-
-    def sentence_to_conll_pred(sentence):
-        seperator = "\t"
-        placeholder = "*"
-        st = nltk.stem.lancaster.LancasterStemmer()
-        pos = nltk.pos_tag(sentence)
-
-        NUM_PROPS = count_predicate(pos,sentence)
-        print NUM_PROPS
-        nltk.download('averaged_perceptron_tagger')
-        with open("to_be_predicted.txt", 'w') as f:
-            for i,s in enumerate(sentence.split(" ")):
-                tag = pos[i]
-                print s,tag
-                if tag in ["VB","VBZ","VBD","VBG","VBN","VBP"]:#predicates or verb
-                    target = st.stem(s)
-                else:
-                    target = "-"
-                line = [s] + [placeholder] * 3 + [target] + [placeholder]* NUM_PROPS
-                f.write(seperator.join(line)+"\n")
-
-    sentence_to_conll_pred(sentence)
-    predict_corpus = load_conll("to_be_predicted.txt")
-
-    # predict_corpus = load_conll(argv.predict_data)
+    predict_corpus = load_conll(argv.predict_data)
     print '\tTest Sentences: %d' % len(predict_corpus)
 
     """ load initial embedding file """

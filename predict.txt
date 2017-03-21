@@ -1,109 +1,12 @@
-But                            CC       (S1(S*                *     -                       *               *               *               *
-while                          IN       (SBAR*                *     -                       *               *        (AM-ADV*               *
-the                            DT       (S(NP*                *     -                    (A1*               *               *               *
-New                            NNP           *            (ORG*     -                       *               *               *               *
-York                           NNP           *                *     -                       *               *               *               *
-Stock                          NNP           *                *     -                       *               *               *               *
-Exchange                       NNP           *)               *)    -                       *)              *               *               *
-did                            AUX        (VP*                *     -                       *               *               *               *
-n't                            RB            *                *     -                (AM-NEG*)              *               *               *
-fall                           VB         (VP*                *     fall                  (V*)              *               *               *
-apart                          RP        (PRT*)               *     -                    (A4*)              *               *               *
-Friday                         NNP        (NP*)               *     -                (AM-TMP*)              *               *               *
-as                             IN       (SBAR*                *     -                (AM-TMP*               *               *               *
-the                            DT       (S(NP*                *     -                       *            (A1*               *               *
-Dow                            NNP           *           (MISC*     -                       *               *               *               *
-Jones                          NNP           *                *)    -                       *               *               *               *
-Industrial                     NNP           *                *     -                       *               *               *               *
-Average                        NNP           *)               *     -                       *               *)              *               *
-plunged                        VBD        (VP*                *     plunge                  *             (V*)              *               *
-190.58                         CD         (NP*                *     -                       *            (A2*               *               *
-points                         NNS           *))))))))        *     -                       *               *               *               *
---                             :         (PRN*                *     -                       *               *               *               *
-most                           JJS   (PP(ADVP*                *     -                       *               *               *               *
-of                             IN         (PP*                *     -                       *               *               *               *
-it                             PRP        (NP*)))             *     -                       *               *               *               *
-in                             IN            *                *     -                       *               *               *               *
-the                            DT         (NP*                *     -                       *               *               *               *
-final                          JJ            *                *     -                       *               *               *               *
-hour                           NN            *))              *     -                       *               *               *               *
---                             :             *)               *     -                       *)              *)              *)              *
-it                             PRP        (NP*)               *     -                       *               *            (A0*)           (A1*)
-barely                         RB    (VP(ADVP*)               *     -                       *               *        (AM-ADV*)              *
-managed                        VBD           *                *     manage                  *               *             (V*)              *
-to                             TO       (S(VP*                *     -                       *               *            (A1*               *
-stay                           VB         (VP*                *     stay                    *               *               *             (V*)
-this                           DT         (NP*                *     -                       *               *               *            (A3*
-side                           NN            *)               *     -                       *               *               *               *
-of                             IN         (PP*                *     -                       *               *               *               *
-chaos                          NN         (NP*))))))          *     -                       *               *               *)              *)
-.                              .             *))              *     -                       *               *               *               *
-
-Scotty        NNP   (S1(S(NP*)      (PER*)    -            (A0*)        (A0*)
-accepted      VBD     (VP(VP*           *     accept        (V*)           *
-the           DT         (NP*           *     -            (A1*            *
-decision      NN            *)          *     -               *)           *
-with          IN         (PP*           *     -        (AM-MNR*            *
-indifference  NN         (NP*)))        *     -               *)           *
-and           CC            *           *     -               *            *
-did           AUX        (VP*           *     -               *            *
-not           RB            *           *     -               *     (AM-NEG*)
-enter         VB         (VP*           *     enter           *          (V*)
-the           DT         (NP*           *     -               *         (A1*
-arguments     NNS           *))))       *     -               *            *)
-.             .             *))         *     -               *            *
-
-But                            CC       (S1(S*                *     -                       *               *               *               *
-while                          IN       (SBAR*                *     -                       *               *               *               *
-the                            DT       (S(NP*                *     -                       *               *               *               *
-New                            NNP           *            (ORG*     -                       *               *               *               *
-York                           NNP           *                *     -                       *               *               *               *
-Stock                          NNP           *                *     -                       *               *               *               *
-Exchange                       NNP           *)               *)    -                       *               *               *               *
-did                            AUX        (VP*                *     -                       *               *               *               *
-n't                            RB            *                *     -                       *               *               *               *
-fall                           VB         (VP*                *     fall                    *               *               *               *
-apart                          RP        (PRT*)               *     -                       *               *               *               *
-Friday                         NNP        (NP*)               *     -                       *               *               *               *
-as                             IN       (SBAR*                *     -                       *               *               *               *
-the                            DT       (S(NP*                *     -                       *               *               *               *
-Dow                            NNP           *           (MISC*     -                       *               *               *               *
-Jones                          NNP           *                *)    -                       *               *               *               *
-Industrial                     NNP           *                *     -                       *               *               *               *
-Average                        NNP           *)               *     -                       *               *               *               *
-plunged                        VBD        (VP*                *     plunge                  *               *               *               *
-190.58                         CD         (NP*                *     -                       *               *               *               *
-points                         NNS           *))))))))        *     -                       *               *               *               *
---                             :         (PRN*                *     -                       *               *               *               *
-most                           JJS   (PP(ADVP*                *     -                       *               *               *               *
-of                             IN         (PP*                *     -                       *               *               *               *
-it                             PRP        (NP*)))             *     -                       *               *               *               *
-in                             IN            *                *     -                       *               *               *               *
-the                            DT         (NP*                *     -                       *               *               *               *
-final                          JJ            *                *     -                       *               *               *               *
-hour                           NN            *))              *     -                       *               *               *               *
---                             :             *)               *     -                       *               *               *               *
-it                             PRP        (NP*)               *     -                       *               *               *               *
-barely                         RB    (VP(ADVP*)               *     -                       *               *               *               *
-managed                        VBD           *                *     manage                  *               *               *               *
-to                             TO       (S(VP*                *     -                       *               *               *               *
-stay                           VB         (VP*                *     stay                    *               *               *               *
-this                           DT         (NP*                *     -                       *               *               *               *
-side                           NN            *)               *     -                       *               *               *               *
-of                             IN         (PP*                *     -                       *               *               *               *
-chaos                          NN         (NP*))))))          *     -                       *               *               *               *
-.                              .             *))              *     -                       *               *               *               *
-
-Scotty        *   *      *    -            *        *
-accepted      *     *           *     accept        *           *
-the           *         *           *     -            *            *
-decision      *            *          *     -               *           *
-with          *         *           *     -        *            *
-indifference  *         *        *     -               *           *
-and           *            *           *     -               *            *
-did           *        *           *     -               *            *
-not           *            *           *     -               *     *
-enter         *         *           *     enter           *          *
-the           *         *           *     -               *         *
-arguments     *           *       *     -               *            *
-.             .             *         *     -               *            *
+Scotty	*	*	*	-	*	*
+accepted	*	*	*	accept	*	*
+the	*	*	*	-	*	*
+decision	*	*	*	-	*	*
+with	*	*	*	-	*	*
+indifference	*	*	*	-	*	*
+and	*	*	*	-	*	*
+did	*	*	*	-	*	*
+not	*	*	*	-	*	*
+enter	*	*	*	enter	*	*
+the	*	*	*	-	*	*
+arguments	*	*	*	-	*	*

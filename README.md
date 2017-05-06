@@ -22,7 +22,7 @@ The model gives about F1 = 78.00 on the dev & test set in the following hyperpar
 - Word Embedding: SENNA (http://ronan.collobert.com/senna/)
 
 #reference
-- [Zhou, Jie and Wei Xu. “End-to-end learning of semantic role labeling using recurrent neural networks.” ACL (2015).](https://arxiv.org/pdf/1701.02593.pdf)
+- [Zhou, Jie and Wei Xu. “End-to-end learning of semantic role labeling using recurrent neural networks.” ACL (2015).](http://www.aclweb.org/anthology/P15-1109)
 
 - [Marcheggiani, Diego et al. “A Simple and Accurate Syntax-Agnostic Neural Model for Dependency-based Semantic Role Labeling.” CoRR abs/1701.02593 (2017): n. pag.](https://arxiv.org/pdf/1701.02593.pdf)
 

@@ -1,4 +1,4 @@
-__author__ = 'hiroki'
+__author__ = 'hiroki, wenchen'
 
 
 import sys
@@ -55,6 +55,10 @@ def main(argv):
     )
 
     f, predicts = test(test_model, test_sample_x, test_sample_y, test_arg_dict, 'Test')
+    print predicts
+    print len(predicts)
+    print max(predicts)
+    print min(predicts)
     output_results(test_corpus, te_prds, arg_dict, predicts,
                    'Test-result.layer%d.batch%d.hidden%d.opt-%s.reg-%f.txt' % (
                    argv.layer, argv.batch, argv.hidden, argv.opt, argv.reg))

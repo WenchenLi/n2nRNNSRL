@@ -1,0 +1,12 @@
+Scotty	*	*	*	-	*	*
+accepted	*	*	*	accept	*	*
+the	*	*	*	-	*	*
+decision	*	*	*	-	*	*
+with	*	*	*	-	*	*
+indifference	*	*	*	-	*	*
+and	*	*	*	-	*	*
+did	*	*	*	-	*	*
+not	*	*	*	-	*	*
+enter	*	*	*	enter	*	*
+the	*	*	*	-	*	*
+arguments	*	*	*	-	*	*

@@ -1,4 +1,4 @@
-__author__ = 'hiroki'
+__author__ = 'hiroki, wenchen'
 
 
 from collections import defaultdict
@@ -58,6 +58,13 @@ class Vocab(object):
 
 
 def load_conll(path, exclude=False, file_encoding='utf-8'):
+    """
+    load conll 2005 into list of list
+    :param path:
+    :param exclude:
+    :param file_encoding:
+    :return: list of list of string
+    """
     corpus = []
 
     with open(path) as f:
@@ -69,8 +76,8 @@ def load_conll(path, exclude=False, file_encoding='utf-8'):
 #                word = RE_NUM.sub(u'0', word)
                 tag = es[1].decode(file_encoding)
                 syn = es[2].decode(file_encoding)
-                ne = es[3].decode(file_encoding)
-                prd = es[4].decode(file_encoding)
+                ne = es[3].decode(file_encoding) # you can ingore 1-3 for n2n SRL task, but we parse here just in case
+                prd = es[4].decode(file_encoding)#Target
                 prop = []
 
                 if len(es) > 5:
@@ -175,6 +182,11 @@ def get_id_samples(corpus, vocab_word, a_dict=None, sort=False):
 
 
 def load_init_emb(init_emb):
+    """
+    load word embeddings into init_emb and Vocab
+    :param init_emb: path to file
+    :return: emb(vectors) | ndarray, vocab |Vocab
+    """
     vocab = Vocab()
     vocab.add_word(PAD)
     vocab.add_word(UNK)
@@ -312,6 +324,36 @@ def convert_data_test(id_sents, prds, id_ctx, marks, args, emb):
             batch_y.append(np.asarray([arg], dtype='int32'))
 
     return batch_x, batch_y
+
+
+def convert_data_predict(id_sents, prds, id_ctx, marks, emb):
+    batch_x = []
+
+    for s_i in xrange(len(id_sents)):
+        sent_w = [emb[w_id] for w_id in id_sents[s_i]]
+        sent_prds = prds[s_i]
+        sent_ctx = id_ctx[s_i]
+        sent_marks = marks[s_i]
+
+        for p_i, p_index in enumerate(sent_prds):
+            prd = sent_w[p_index]
+            ctx = []
+            for w_index in sent_ctx[p_i]:
+                ctx.extend(sent_w[w_index])
+
+            mark = sent_marks[p_i]
+            sent_sample = []
+            for w_index, w in enumerate(sent_w):
+                sample = []
+                sample.extend(w)
+                sample.extend(prd)
+                sample.extend(ctx)
+                sample.append(mark[w_index])
+                sent_sample.append(sample)
+
+            batch_x.append(np.asarray([sent_sample], dtype=theano.config.floatX))
+
+    return batch_x,
 
 
 def shuffle(sample_x, sample_y):
@@ -617,158 +659,6 @@ def output_results(corpus, prd_indices, arg_dict, predicts, path):
         print >> f
 
 
-def print_iob_text(corpus, args, arg_dict):
-    out = open('iob.txt', 'w')
-
-    for s_i, sent in enumerate(corpus):
-        sent_args = args[s_i]
-        n_prds = len(sent[0][5])
-        for w_i, w in enumerate(sent):
-            arg = ''
-            for p_i in xrange(n_prds):
-                arg += arg_dict.get_word(sent_args[p_i][w_i]) + '\t'
-            print >> out, '%s\t%s\t%s\t%s\t%s\t%s' % (w[0], w[1], w[2], w[3], w[4], arg)
-        print >> out
-
-
-def set_args_iob(corpus, arg_dict=None):
-
-    def get_args(sent):
-        n_prds = len(sent[0][5])
-        sent_args = [[] for i in xrange(n_prds)]
-        if n_prds == 0:
-            return sent_args
-
-        for prd_i in xrange(n_prds):
-            prev = None
-            for w in sent:
-                arg = w[5][prd_i]
-                if arg.startswith('('):
-                    if arg.endswith(')'):
-                        arg_label = 'S-' + arg[1:-2]
-                        a_dict.add_word(arg_label)
-                        sent_args[prd_i].append(a_dict.get_id(arg_label))
-                        prev = None
-                    else:
-                        prev = arg[1:-1]
-                        arg_label = 'B-' + prev
-                        a_dict.add_word(arg_label)
-                        sent_args[prd_i].append(a_dict.get_id(arg_label))
-                else:
-                    if prev:
-                        if arg.endswith(')'):
-                            arg_label = 'E-' + prev
-                            prev = None
-                        else:
-                            arg_label = 'I-' + prev
-                        a_dict.add_word(arg_label)
-                        sent_args[prd_i].append(a_dict.get_id(arg_label))
-                    else:
-                        arg_label = 'O'
-                        a_dict.add_word(arg_label)
-                        sent_args[prd_i].append(a_dict.get_id(arg_label))
-        return sent_args
-
-    if arg_dict:
-        a_dict = deepcopy(arg_dict)
-    else:
-        a_dict = Vocab()
-    args = [get_args(sentence) for sentence in corpus]
-
-    return args, a_dict
-
-
-def output_results_iob(corpus, prd_indices, arg_dict, predicts, path):
-    def get_spans(pred_args):
-        spans = []
-        span = []
-        for w_i, a_id in enumerate(pred_args):
-            label = arg_dict.get_word(a_id)
-            if label.startswith('B-'):
-                if span:
-                    spans.append(span)
-                span = [label[2:], w_i, w_i]
-            elif label.startswith('I-'):
-                if span:
-                    if label[2:] == span[0]:
-                        span[2] = w_i
-                    else:
-                        spans.append(span)
-                        span = [label[2:], w_i, w_i]
-                else:
-                    span = [label[2:], w_i, w_i]
-            elif label.startswith('S-'):
-                if span:
-                    spans.append(span)
-                    span = []
-                spans.append([label[2:], w_i, w_i])
-            elif label.startswith('E-'):
-                if span:
-                    if label[2:] == span[0]:
-                        span[2] = w_i
-                        spans.append(span)
-                    else:
-                        spans.append(span)
-                        spans.append([label[2:], w_i, w_i])
-                    span = []
-                else:
-                    span = [label[2:], w_i, w_i]
-            else:
-                if span:
-                    spans.append(span)
-                span = []
-        if span:
-            spans.append(span)
-        return spans
-
-    def convert(sent, spans):
-        k = 0
-        args = []
-        for w_i in xrange(len(sent)):
-            if k >= len(spans):
-                args.append('*')
-                continue
-            span = spans[k]
-            if span[1] < w_i < span[2]:  # within span
-                args.append('*')
-            elif w_i == span[1] and w_i == span[2]:  # begin and end of span
-                args.append('(' + span[0] + '*)')
-                k += 1
-            elif w_i == span[1]:  # begin of span
-                args.append('(' + span[0] + '*')
-            elif w_i == span[2]:  # end of span
-                args.append('*)')
-                k += 1
-            else:
-                args.append('*')  # without span
-        return args
-
-
-    k = 0
-    f = open(path, 'w')
-
-    for sent_i in xrange(len(corpus)):
-        sent = corpus[sent_i]
-        prds = prd_indices[sent_i]
-        column = []
-        for i in xrange(len(sent)):
-            column.append([[] for j in xrange(len(prds) + 1)])
-        p_i = 0
-        for w_i, w in enumerate(sent):
-            column[w_i][0] = w[4]  # base form of prd
-            if w_i in prds:
-                p_i += 1
-                spans = get_spans(predicts[k])
-                args = convert(sent, spans)
-                for w_j, a_label in enumerate(args):
-                    column[w_j][p_i] = a_label
-                k += 1
-        for c in column:
-            text = "\t".join(c)
-            print >> f, text
-        print >> f
-
-
 def count_spans(spans):
     total = 0
     for span in spans:
@@ -852,3 +742,152 @@ def count_correct(errors):
     return total, correct
 
 
+# def print_iob_text(corpus, args, arg_dict):
+#     out = open('iob.txt', 'w')
+#
+#     for s_i, sent in enumerate(corpus):
+#         sent_args = args[s_i]
+#         n_prds = len(sent[0][5])
+#         for w_i, w in enumerate(sent):
+#             arg = ''
+#             for p_i in xrange(n_prds):
+#                 arg += arg_dict.get_word(sent_args[p_i][w_i]) + '\t'
+#             print >> out, '%s\t%s\t%s\t%s\t%s\t%s' % (w[0], w[1], w[2], w[3], w[4], arg)
+#         print >> out
+#
+# def set_args_iob(corpus, arg_dict=None):
+#
+#     def get_args(sent):
+#         n_prds = len(sent[0][5])
+#         sent_args = [[] for i in xrange(n_prds)]
+#         if n_prds == 0:
+#             return sent_args
+#
+#         for prd_i in xrange(n_prds):
+#             prev = None
+#             for w in sent:
+#                 arg = w[5][prd_i]
+#                 if arg.startswith('('):
+#                     if arg.endswith(')'):
+#                         arg_label = 'S-' + arg[1:-2]
+#                         a_dict.add_word(arg_label)
+#                         sent_args[prd_i].append(a_dict.get_id(arg_label))
+#                         prev = None
+#                     else:
+#                         prev = arg[1:-1]
+#                         arg_label = 'B-' + prev
+#                         a_dict.add_word(arg_label)
+#                         sent_args[prd_i].append(a_dict.get_id(arg_label))
+#                 else:
+#                     if prev:
+#                         if arg.endswith(')'):
+#                             arg_label = 'E-' + prev
+#                             prev = None
+#                         else:
+#                             arg_label = 'I-' + prev
+#                         a_dict.add_word(arg_label)
+#                         sent_args[prd_i].append(a_dict.get_id(arg_label))
+#                     else:
+#                         arg_label = 'O'
+#                         a_dict.add_word(arg_label)
+#                         sent_args[prd_i].append(a_dict.get_id(arg_label))
+#         return sent_args
+#
+#     if arg_dict:
+#         a_dict = deepcopy(arg_dict)
+#     else:
+#         a_dict = Vocab()
+#     args = [get_args(sentence) for sentence in corpus]
+#
+#     return args, a_dict
+#
+#
+# def output_results_iob(corpus, prd_indices, arg_dict, predicts, path):
+#     def get_spans(pred_args):
+#         spans = []
+#         span = []
+#         for w_i, a_id in enumerate(pred_args):
+#             label = arg_dict.get_word(a_id)
+#             if label.startswith('B-'):
+#                 if span:
+#                     spans.append(span)
+#                 span = [label[2:], w_i, w_i]
+#             elif label.startswith('I-'):
+#                 if span:
+#                     if label[2:] == span[0]:
+#                         span[2] = w_i
+#                     else:
+#                         spans.append(span)
+#                         span = [label[2:], w_i, w_i]
+#                 else:
+#                     span = [label[2:], w_i, w_i]
+#             elif label.startswith('S-'):
+#                 if span:
+#                     spans.append(span)
+#                     span = []
+#                 spans.append([label[2:], w_i, w_i])
+#             elif label.startswith('E-'):
+#                 if span:
+#                     if label[2:] == span[0]:
+#                         span[2] = w_i
+#                         spans.append(span)
+#                     else:
+#                         spans.append(span)
+#                         spans.append([label[2:], w_i, w_i])
+#                     span = []
+#                 else:
+#                     span = [label[2:], w_i, w_i]
+#             else:
+#                 if span:
+#                     spans.append(span)
+#                 span = []
+#         if span:
+#             spans.append(span)
+#         return spans
+#
+#     def convert(sent, spans):
+#         k = 0
+#         args = []
+#         for w_i in xrange(len(sent)):
+#             if k >= len(spans):
+#                 args.append('*')
+#                 continue
+#             span = spans[k]
+#             if span[1] < w_i < span[2]:  # within span
+#                 args.append('*')
+#             elif w_i == span[1] and w_i == span[2]:  # begin and end of span
+#                 args.append('(' + span[0] + '*)')
+#                 k += 1
+#             elif w_i == span[1]:  # begin of span
+#                 args.append('(' + span[0] + '*')
+#             elif w_i == span[2]:  # end of span
+#                 args.append('*)')
+#                 k += 1
+#             else:
+#                 args.append('*')  # without span
+#         return args
+#
+#
+#     k = 0
+#     f = open(path, 'w')
+#
+#     for sent_i in xrange(len(corpus)):
+#         sent = corpus[sent_i]
+#         prds = prd_indices[sent_i]
+#         column = []
+#         for i in xrange(len(sent)):
+#             column.append([[] for j in xrange(len(prds) + 1)])
+#         p_i = 0
+#         for w_i, w in enumerate(sent):
+#             column[w_i][0] = w[4]  # base form of prd
+#             if w_i in prds:
+#                 p_i += 1
+#                 spans = get_spans(predicts[k])
+#                 args = convert(sent, spans)
+#                 for w_j, a_label in enumerate(args):
+#                     column[w_j][p_i] = a_label
+#                 k += 1
+#         for c in column:
+#             text = "\t".join(c)
+#             print >> f, text
+#         print >> f

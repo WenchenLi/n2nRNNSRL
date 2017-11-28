@@ -1,4 +1,5 @@
-#n2nSRL
+# n2nSRL
+
 deep learning approach(s) on Semantic Role Labeling 
 
 ## Semantic Role Labeler with Recurrent Neural Networks
@@ -61,7 +62,7 @@ you can easily write a script to pipline the prediction process by :
 2. put the base form(finds->find) to the target column 5th column as shown in predict.txt example, for chinese it is
     the same as the word itself.
 
-#reference
+# reference
 - [Zhou, Jie and Wei Xu. “End-to-end learning of semantic role labeling using recurrent neural networks.” ACL (2015).](http://www.aclweb.org/anthology/P15-1109)
 
 
